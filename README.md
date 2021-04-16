@@ -1,0 +1,1 @@
+# SimpleServiceWorkerProgram for testing
