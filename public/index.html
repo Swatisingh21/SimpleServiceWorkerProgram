@@ -40,6 +40,74 @@
     <script src="scripts/vanilla-router/dist/vanilla-router.min.js"></script>
     <script src="js/app.js"></script>
     <script type="text/javascript">
+        var clevertap_account_id = "867-R5K-8R5Z";
+        var clevertap = {
+            event: [],
+            profile: [],
+            account: [],
+            onUserLogin: [],
+            notifications: [],
+            privacy: []
+        };
+        clevertap.account.push({
+            "id": clevertap_account_id
+        });
+        clevertap.privacy.push({
+            optOut: false
+        });
+        clevertap.privacy.push({
+            useIP: false
+        });
+
+        function postDomContentLoadedFunction(a) {
+            if ("undefined" != typeof window.attachEvent) {
+                debugger;
+                return window.attachEvent("onload", a);
+            } else {
+                if (window.addEventListener) {
+                    debugger;
+                    return window.addEventListener("load", a, false);
+                }
+            }
+        }
+
+        function clevertapJS() {
+            var cleverTapJS = ('https:' == document.location.protocol ? 'https://d2r1yp2w7bby2u.cloudfront.net' :
+                'http://static.clevertap.com') + '/js/a.js';
+            //loadJS(cleverTapJS);
+            var tag = document.createElement("script");
+            tag.src = cleverTapJS;
+            tag.async = true;
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(tag, s);
+            setTimeout(function () {
+                clevertap.notifications.push({
+                    "titleText": 'Your favourites are a CLiQ away!',
+                    "bodyText": 'Get updates on your favourite brands, the biggest sales and products you love!',
+                    "okButtonText": 'Yes, I\'m on Board',
+                    "rejectButtonText": 'Ask me later',
+                    "okButtonColor": '#a91e3e',
+                    "askAgainTimeInSeconds": 604800,
+                    "serviceWorkerPath": "/service-worker.js",
+                    "okCallback": function () {
+                        clevertap.event.push("Web Push Notifications", {
+                            "User Accepted": "Yes"
+                        });
+                    },
+                    "rejectCallback": function () {
+                        clevertap.event.push("Web Push Notifications", {
+                            "User Accepted": "No"
+                        });
+                    }
+                });
+            }, 3000);
+
+        }
+
+        postDomContentLoadedFunction(clevertapJS);
+
+    </script>
+    <script type="text/javascript">
         if ("serviceWorker" in navigator) {
             window.addEventListener("load", function () {
                 navigator.serviceWorker.register("/service-worker.js").then(
